@@ -16,12 +16,12 @@
 package main
 
 import (
-	"app-name/apiserver"
-	"app-name/apiservices"
-	"app-name/conf"
-	"app-name/eliona"
-	confmodel "app-name/model/conf"
 	"context"
+	"device-simulator/apiserver"
+	"device-simulator/apiservices"
+	"device-simulator/conf"
+	"device-simulator/eliona"
+	confmodel "device-simulator/model/conf"
 	"net/http"
 	"sync"
 	"time"

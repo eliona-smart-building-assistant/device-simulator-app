@@ -16,10 +16,10 @@
 package conf
 
 import (
-	"app-name/appdb"
-	confmodel "app-name/model/conf"
 	"context"
 	"database/sql"
+	"device-simulator/appdb"
+	confmodel "device-simulator/model/conf"
 	"encoding/json"
 	"errors"
 	"fmt"

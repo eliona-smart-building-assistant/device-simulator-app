@@ -16,7 +16,7 @@
 package eliona
 
 import (
-	confmodel "app-name/model/conf"
+	confmodel "device-simulator/model/conf"
 	"fmt"
 
 	api "github.com/eliona-smart-building-assistant/go-eliona-api-client/v2"

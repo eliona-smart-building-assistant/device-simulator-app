@@ -1,16 +1,16 @@
 {
-  "name": "app-name",
+  "name": "device-simulator",
   "elionaMinVersion": "v11.0.0",
   "displayName": {
-    "en": "App Name",
-    "de": "App Name"
+    "en": "Device Simulator",
+    "de": "Device Simulator"
   },
   "description": {
-    "en": "The App Name app is used to access App Name.",
-    "de": "Die App Name App ermöglicht den Zugriff auf App Name."
+    "en": "The Device Simulator app is used to generate data simulating device input.",
+    "de": "Die Device Simulator App wird zur Erzeugung von Daten verwendet, die die Geräteeingabe simulieren."
   },
   "dashboardTemplateNames": [
-    "App Name"
+    "Device Simulator"
   ],
   "apiUrl": "v1",
   "apiSpecificationPath": "/version/openapi.json",

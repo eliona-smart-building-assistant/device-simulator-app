@@ -16,8 +16,8 @@
 package apiservices
 
 import (
-	"app-name/apiserver"
 	"context"
+	"device-simulator/apiserver"
 	"net/http"
 )
 

@@ -16,9 +16,9 @@
 package assetmodel
 
 import (
-	"app-name/conf"
-	confmodel "app-name/model/conf"
 	"context"
+	"device-simulator/conf"
+	confmodel "device-simulator/model/conf"
 	"fmt"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"
@@ -57,7 +57,7 @@ func (d *ExampleDevice) GetDescription() string {
 }
 
 func (d *ExampleDevice) GetAssetType() string {
-	return "app_name_device"
+	return "device_simulator_device"
 }
 
 func (d *ExampleDevice) GetGAI() string {
@@ -91,15 +91,15 @@ type Root struct {
 }
 
 func (r *Root) GetName() string {
-	return "app_name"
+	return "device_simulator"
 }
 
 func (r *Root) GetDescription() string {
-	return "Root asset for App Name devices"
+	return "Root asset for Device Simulator devices"
 }
 
 func (r *Root) GetAssetType() string {
-	return "app_name_root"
+	return "device_simulator_root"
 }
 
 func (r *Root) GetGAI() string {

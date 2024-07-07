@@ -16,10 +16,10 @@
 package apiservices
 
 import (
-	"app-name/apiserver"
-	"app-name/conf"
-	confmodel "app-name/model/conf"
 	"context"
+	"device-simulator/apiserver"
+	"device-simulator/conf"
+	confmodel "device-simulator/model/conf"
 	"errors"
 	"net/http"
 )

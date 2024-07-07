@@ -1,15 +1,15 @@
 package eliona
 
 import (
-	assetmodel "app-name/model/asset"
-	confmodel "app-name/model/conf"
+	assetmodel "device-simulator/model/asset"
+	confmodel "device-simulator/model/conf"
 	"fmt"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
 
-const ClientReference string = "app-name"
+const ClientReference string = "device-simulator"
 
 func UpsertAssetData(config confmodel.Configuration, assets []assetmodel.ExampleDevice) error {
 	for _, projectId := range config.ProjectIDs {

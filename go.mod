@@ -1,4 +1,4 @@
-module app-name
+module device-simulator
 
 go 1.21
 

@@ -4,9 +4,7 @@
 package appdb
 
 var TableNames = struct {
-	Asset         string
-	Configuration string
+	Generator string
 }{
-	Asset:         "asset",
-	Configuration: "configuration",
+	Generator: "generator",
 }

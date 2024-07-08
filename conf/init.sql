@@ -16,27 +16,16 @@
 create schema if not exists device_simulator;
 
 -- Should be editable by eliona frontend.
-create table if not exists device_simulator.configuration
+CREATE TABLE IF NOT EXISTS device_simulator.generator
 (
-	id                   bigserial primary key,
-	api_access_change_me text not null,
-	refresh_interval     integer not null default 60,
-	request_timeout      integer not null default 120,
-	asset_filter         json not null,
-	active               boolean not null default false,
-	enable               boolean not null default false,
-	project_ids          text[] not null,
-	user_id              text not null
-);
-
-create table if not exists device_simulator.asset
-(
-	id               bigserial primary key,
-	configuration_id bigserial not null references device_simulator.configuration(id) ON DELETE CASCADE,
-	project_id       text      not null,
-	global_asset_id  text      not null,
-	provider_id      text      not null,
-	asset_id         integer
+    id                  BIGSERIAL PRIMARY KEY,
+    asset_id            INTEGER NOT NULL,
+    attribute           TEXT NOT NULL,
+    function_type       VARCHAR(50) NOT NULL,      -- Type of function (e.g., "boolean", "sin_wave", "sawtooth_wave")
+    min_value           DOUBLE PRECISION NOT NULL, -- Minimum value for the generated data
+    max_value           DOUBLE PRECISION NOT NULL, -- Maximum value for the generated data
+    interval_seconds    INTEGER NOT NULL,          -- Interval in seconds for data generation
+    frequency           DOUBLE PRECISION NOT NULL  -- Frequency for wave functions or duty cycle
 );
 
 -- There is a transaction started in app.Init(). We need to commit to make the

@@ -15,28 +15,13 @@
 
 package confmodel
 
-type Configuration struct {
-	Id                int64
-	ApiAccessChangeMe string
-	RefreshInterval   int32
-	RequestTimeout    int32
-	AssetFilter       [][]FilterRule
-	Enable            bool
-	Active            bool
-	ProjectIDs        []string
-	UserId            string
-}
-
-type FilterRule struct {
-	Parameter string
-	Regex     string
-}
-
-type Asset struct {
-	ID            int64
-	Config        Configuration
-	ProjectID     string
-	GlobalAssetID string
-	ProviderID    string
-	AssetID       int32
+type Generator struct {
+	Id              int32
+	AssetId         int32
+	Attribute       string
+	FunctionType    string
+	MinValue        float64
+	MaxValue        float64
+	IntervalSeconds int32
+	Frequency       float64
 }

@@ -18,8 +18,6 @@ package apiservices
 import (
 	"context"
 	"device-simulator/apiserver"
-	"device-simulator/conf"
-	confmodel "device-simulator/model/conf"
 	"errors"
 	"net/http"
 )
@@ -35,118 +33,66 @@ func NewConfigurationAPIService() apiserver.ConfigurationAPIServicer {
 	return &ConfigurationAPIService{}
 }
 
-func (s *ConfigurationAPIService) GetConfigurations(ctx context.Context) (apiserver.ImplResponse, error) {
-	configs, err := conf.GetConfigs(ctx)
-	if err != nil {
-		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
-	}
-	return apiserver.Response(http.StatusOK, configs), nil
+// GeneratorsGet - List all generators
+func (s *ConfigurationAPIService) GeneratorsGet(ctx context.Context) (apiserver.ImplResponse, error) {
+	// TODO - update GeneratorsGet with the required logic for this service method.
+	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+
+	// TODO: Uncomment the next line to return response Response(200, []Generator{}) or use other options such as http.Ok ...
+	// return apiserver.Response(200, []Generator{}), nil
+
+	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsGet method not implemented")
 }
 
-func (s *ConfigurationAPIService) PostConfiguration(ctx context.Context, config apiserver.Configuration) (apiserver.ImplResponse, error) {
-	appConfig := toAppConfig(config)
-	insertedConfig, err := conf.InsertConfig(ctx, appConfig)
-	if err != nil {
-		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
-	}
-	return apiserver.Response(http.StatusCreated, insertedConfig), nil
+// GeneratorsIdDelete - Delete a generator by ID
+func (s *ConfigurationAPIService) GeneratorsIdDelete(ctx context.Context, id int32) (apiserver.ImplResponse, error) {
+	// TODO - update GeneratorsIdDelete with the required logic for this service method.
+	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+
+	// TODO: Uncomment the next line to return response Response(204, {}) or use other options such as http.Ok ...
+	// return apiserver.Response(204, nil),nil
+
+	// TODO: Uncomment the next line to return response Response(404, {}) or use other options such as http.Ok ...
+	// return apiserver.Response(404, nil),nil
+
+	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsIdDelete method not implemented")
 }
 
-func (s *ConfigurationAPIService) GetConfigurationById(ctx context.Context, configId int64) (apiserver.ImplResponse, error) {
-	config, err := conf.GetConfig(ctx, configId)
-	if errors.Is(err, conf.ErrNotFound) {
-		return apiserver.ImplResponse{Code: http.StatusNotFound}, nil
-	}
-	if err != nil {
-		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
-	}
-	return apiserver.Response(http.StatusOK, config), nil
+// GeneratorsIdGet - Get a generator by ID
+func (s *ConfigurationAPIService) GeneratorsIdGet(ctx context.Context, id int32) (apiserver.ImplResponse, error) {
+	// TODO - update GeneratorsIdGet with the required logic for this service method.
+	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+
+	// TODO: Uncomment the next line to return response Response(200, Generator{}) or use other options such as http.Ok ...
+	// return apiserver.Response(200, Generator{}), nil
+
+	// TODO: Uncomment the next line to return response Response(404, {}) or use other options such as http.Ok ...
+	// return apiserver.Response(404, nil),nil
+
+	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsIdGet method not implemented")
 }
 
-func (s *ConfigurationAPIService) PutConfigurationById(ctx context.Context, configId int64, config apiserver.Configuration) (apiserver.ImplResponse, error) {
-	config.Id = &configId
-	appConfig := toAppConfig(config)
-	upsertedConfig, err := conf.UpsertConfig(ctx, appConfig)
-	if err != nil {
-		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
-	}
-	return apiserver.Response(http.StatusCreated, upsertedConfig), nil
+// GeneratorsIdPut - Update a generator by ID
+func (s *ConfigurationAPIService) GeneratorsIdPut(ctx context.Context, id int32, generator apiserver.Generator) (apiserver.ImplResponse, error) {
+	// TODO - update GeneratorsIdPut with the required logic for this service method.
+	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+
+	// TODO: Uncomment the next line to return response Response(200, {}) or use other options such as http.Ok ...
+	// return apiserver.Response(200, nil),nil
+
+	// TODO: Uncomment the next line to return response Response(404, {}) or use other options such as http.Ok ...
+	// return apiserver.Response(404, nil),nil
+
+	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsIdPut method not implemented")
 }
 
-func (s *ConfigurationAPIService) DeleteConfigurationById(ctx context.Context, configId int64) (apiserver.ImplResponse, error) {
-	err := conf.DeleteConfig(ctx, configId)
-	if errors.Is(err, conf.ErrNotFound) {
-		return apiserver.ImplResponse{Code: http.StatusNotFound}, nil
-	}
-	if err != nil {
-		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
-	}
-	return apiserver.ImplResponse{Code: http.StatusNoContent}, nil
-}
+// GeneratorsPost - Create a new generator
+func (s *ConfigurationAPIService) GeneratorsPost(ctx context.Context, generator apiserver.Generator) (apiserver.ImplResponse, error) {
+	// TODO - update GeneratorsPost with the required logic for this service method.
+	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 
-func toAPIConfig(appConfig confmodel.Configuration) apiserver.Configuration {
-	return apiserver.Configuration{
-		Id:                &appConfig.Id,
-		ApiAccessChangeMe: appConfig.ApiAccessChangeMe,
-		Enable:            &appConfig.Enable,
-		RefreshInterval:   appConfig.RefreshInterval,
-		RequestTimeout:    &appConfig.RequestTimeout,
-		AssetFilter:       toAPIAssetFilter(appConfig.AssetFilter),
-		Active:            &appConfig.Active,
-		ProjectIDs:        &appConfig.ProjectIDs,
-		UserId:            &appConfig.UserId,
-	}
-}
+	// TODO: Uncomment the next line to return response Response(201, {}) or use other options such as http.Ok ...
+	// return apiserver.Response(201, nil),nil
 
-func toAPIAssetFilter(appAF [][]confmodel.FilterRule) (result [][]apiserver.FilterRule) {
-	for _, outer := range appAF {
-		var innerResult []apiserver.FilterRule
-		for _, fr := range outer {
-			innerResult = append(innerResult, apiserver.FilterRule{
-				Parameter: fr.Parameter,
-				Regex:     fr.Regex,
-			})
-		}
-		result = append(result, innerResult)
-	}
-	return result
-}
-
-func toAppConfig(apiConfig apiserver.Configuration) (appConfig confmodel.Configuration) {
-	appConfig.ApiAccessChangeMe = apiConfig.ApiAccessChangeMe
-
-	if apiConfig.Id != nil {
-		appConfig.Id = *apiConfig.Id
-	}
-	appConfig.RefreshInterval = apiConfig.RefreshInterval
-	if apiConfig.RequestTimeout != nil {
-		appConfig.RequestTimeout = *apiConfig.RequestTimeout
-	}
-	if apiConfig.AssetFilter != nil {
-		appConfig.AssetFilter = toAppAssetFilter(apiConfig.AssetFilter)
-	}
-	if apiConfig.Active != nil {
-		appConfig.Active = *apiConfig.Active
-	}
-	if apiConfig.Enable != nil {
-		appConfig.Enable = *apiConfig.Enable
-	}
-	if apiConfig.ProjectIDs != nil {
-		appConfig.ProjectIDs = *apiConfig.ProjectIDs
-	}
-	return appConfig
-}
-
-func toAppAssetFilter(apiAF [][]apiserver.FilterRule) (result [][]confmodel.FilterRule) {
-	for _, outer := range apiAF {
-		var innerResult []confmodel.FilterRule
-		for _, fr := range outer {
-			innerResult = append(innerResult, confmodel.FilterRule{
-				Parameter: fr.Parameter,
-				Regex:     fr.Regex,
-			})
-		}
-		result = append(result, innerResult)
-	}
-	return result
+	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsPost method not implemented")
 }

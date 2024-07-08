@@ -11,8 +11,6 @@ package apiserver
 
 import (
 	"encoding/json"
-	"errors"
-	"io"
 	"net/http"
 	"strings"
 
@@ -52,46 +50,58 @@ func NewConfigurationAPIController(s ConfigurationAPIServicer, opts ...Configura
 // Routes returns all the api routes for the ConfigurationAPIController
 func (c *ConfigurationAPIController) Routes() Routes {
 	return Routes{
-		"DeleteConfigurationById": Route{
+		"GeneratorsGet": Route{
+			strings.ToUpper("Get"),
+			"/v1/generators",
+			c.GeneratorsGet,
+		},
+		"GeneratorsIdDelete": Route{
 			strings.ToUpper("Delete"),
-			"/v1/configs/{config-id}",
-			c.DeleteConfigurationById,
+			"/v1/generators/{id}",
+			c.GeneratorsIdDelete,
 		},
-		"GetConfigurationById": Route{
+		"GeneratorsIdGet": Route{
 			strings.ToUpper("Get"),
-			"/v1/configs/{config-id}",
-			c.GetConfigurationById,
+			"/v1/generators/{id}",
+			c.GeneratorsIdGet,
 		},
-		"GetConfigurations": Route{
-			strings.ToUpper("Get"),
-			"/v1/configs",
-			c.GetConfigurations,
-		},
-		"PostConfiguration": Route{
-			strings.ToUpper("Post"),
-			"/v1/configs",
-			c.PostConfiguration,
-		},
-		"PutConfigurationById": Route{
+		"GeneratorsIdPut": Route{
 			strings.ToUpper("Put"),
-			"/v1/configs/{config-id}",
-			c.PutConfigurationById,
+			"/v1/generators/{id}",
+			c.GeneratorsIdPut,
+		},
+		"GeneratorsPost": Route{
+			strings.ToUpper("Post"),
+			"/v1/generators",
+			c.GeneratorsPost,
 		},
 	}
 }
 
-// DeleteConfigurationById - Deletes a configuration
-func (c *ConfigurationAPIController) DeleteConfigurationById(w http.ResponseWriter, r *http.Request) {
+// GeneratorsGet - List all generators
+func (c *ConfigurationAPIController) GeneratorsGet(w http.ResponseWriter, r *http.Request) {
+	result, err := c.service.GeneratorsGet(r.Context())
+	// If an error occurred, encode the error with the status code
+	if err != nil {
+		c.errorHandler(w, r, err, &result)
+		return
+	}
+	// If no error, encode the body and the result code
+	EncodeJSONResponse(result.Body, &result.Code, w)
+}
+
+// GeneratorsIdDelete - Delete a generator by ID
+func (c *ConfigurationAPIController) GeneratorsIdDelete(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	configIdParam, err := parseNumericParameter[int64](
-		params["config-id"],
-		WithRequire[int64](parseInt64),
+	idParam, err := parseNumericParameter[int32](
+		params["id"],
+		WithRequire[int32](parseInt32),
 	)
 	if err != nil {
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
-	result, err := c.service.DeleteConfigurationById(r.Context(), configIdParam)
+	result, err := c.service.GeneratorsIdDelete(r.Context(), idParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)
@@ -101,18 +111,18 @@ func (c *ConfigurationAPIController) DeleteConfigurationById(w http.ResponseWrit
 	EncodeJSONResponse(result.Body, &result.Code, w)
 }
 
-// GetConfigurationById - Get configuration
-func (c *ConfigurationAPIController) GetConfigurationById(w http.ResponseWriter, r *http.Request) {
+// GeneratorsIdGet - Get a generator by ID
+func (c *ConfigurationAPIController) GeneratorsIdGet(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	configIdParam, err := parseNumericParameter[int64](
-		params["config-id"],
-		WithRequire[int64](parseInt64),
+	idParam, err := parseNumericParameter[int32](
+		params["id"],
+		WithRequire[int32](parseInt32),
 	)
 	if err != nil {
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
-	result, err := c.service.GetConfigurationById(r.Context(), configIdParam)
+	result, err := c.service.GeneratorsIdGet(r.Context(), idParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)
@@ -122,36 +132,33 @@ func (c *ConfigurationAPIController) GetConfigurationById(w http.ResponseWriter,
 	EncodeJSONResponse(result.Body, &result.Code, w)
 }
 
-// GetConfigurations - Get configurations
-func (c *ConfigurationAPIController) GetConfigurations(w http.ResponseWriter, r *http.Request) {
-	result, err := c.service.GetConfigurations(r.Context())
-	// If an error occurred, encode the error with the status code
+// GeneratorsIdPut - Update a generator by ID
+func (c *ConfigurationAPIController) GeneratorsIdPut(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	idParam, err := parseNumericParameter[int32](
+		params["id"],
+		WithRequire[int32](parseInt32),
+	)
 	if err != nil {
-		c.errorHandler(w, r, err, &result)
+		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
-	// If no error, encode the body and the result code
-	EncodeJSONResponse(result.Body, &result.Code, w)
-}
-
-// PostConfiguration - Creates a configuration
-func (c *ConfigurationAPIController) PostConfiguration(w http.ResponseWriter, r *http.Request) {
-	configurationParam := Configuration{}
+	generatorParam := Generator{}
 	d := json.NewDecoder(r.Body)
 	d.DisallowUnknownFields()
-	if err := d.Decode(&configurationParam); err != nil && !errors.Is(err, io.EOF) {
+	if err := d.Decode(&generatorParam); err != nil {
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
-	if err := AssertConfigurationRequired(configurationParam); err != nil {
+	if err := AssertGeneratorRequired(generatorParam); err != nil {
 		c.errorHandler(w, r, err, nil)
 		return
 	}
-	if err := AssertConfigurationConstraints(configurationParam); err != nil {
+	if err := AssertGeneratorConstraints(generatorParam); err != nil {
 		c.errorHandler(w, r, err, nil)
 		return
 	}
-	result, err := c.service.PostConfiguration(r.Context(), configurationParam)
+	result, err := c.service.GeneratorsIdPut(r.Context(), idParam, generatorParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)
@@ -161,33 +168,24 @@ func (c *ConfigurationAPIController) PostConfiguration(w http.ResponseWriter, r 
 	EncodeJSONResponse(result.Body, &result.Code, w)
 }
 
-// PutConfigurationById - Updates a configuration
-func (c *ConfigurationAPIController) PutConfigurationById(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	configIdParam, err := parseNumericParameter[int64](
-		params["config-id"],
-		WithRequire[int64](parseInt64),
-	)
-	if err != nil {
-		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
-		return
-	}
-	configurationParam := Configuration{}
+// GeneratorsPost - Create a new generator
+func (c *ConfigurationAPIController) GeneratorsPost(w http.ResponseWriter, r *http.Request) {
+	generatorParam := Generator{}
 	d := json.NewDecoder(r.Body)
 	d.DisallowUnknownFields()
-	if err := d.Decode(&configurationParam); err != nil && !errors.Is(err, io.EOF) {
+	if err := d.Decode(&generatorParam); err != nil {
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return
 	}
-	if err := AssertConfigurationRequired(configurationParam); err != nil {
+	if err := AssertGeneratorRequired(generatorParam); err != nil {
 		c.errorHandler(w, r, err, nil)
 		return
 	}
-	if err := AssertConfigurationConstraints(configurationParam); err != nil {
+	if err := AssertGeneratorConstraints(generatorParam); err != nil {
 		c.errorHandler(w, r, err, nil)
 		return
 	}
-	result, err := c.service.PutConfigurationById(r.Context(), configIdParam, configurationParam)
+	result, err := c.service.GeneratorsPost(r.Context(), generatorParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)

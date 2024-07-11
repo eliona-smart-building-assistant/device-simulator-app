@@ -20,6 +20,7 @@ import (
 	"device-simulator/apiserver"
 	"device-simulator/apiservices"
 	"device-simulator/conf"
+	"device-simulator/eliona"
 	confmodel "device-simulator/model/conf"
 	"net/http"
 	"sync"
@@ -68,14 +69,22 @@ func collectData() {
 	for _, generator := range generators {
 		common.RunOnceWithParam(func(generator confmodel.Generator) {
 			log.Info("main", "Collecting %d started.", generator.Id)
-			// if err := collectResources(&generator); err != nil {
-			// 	return // Error is handled in the method itself.
-			// }
+			if err := generateData(generator); err != nil {
+				return // Error is handled in the method itself.
+			}
 			log.Info("main", "Collecting %d finished.", generator.Id)
 
 			time.Sleep(time.Second * time.Duration(generator.IntervalSeconds))
 		}, generator, generator.Id)
 	}
+}
+
+func generateData(generator confmodel.Generator) error {
+	value := generator.Generate()
+	if err := eliona.UpsertAssetData(generator, value); err != nil {
+		return err
+	}
+	return nil
 }
 
 // listenApi starts the API server and listen for requests

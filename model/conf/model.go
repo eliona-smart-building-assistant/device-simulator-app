@@ -15,6 +15,11 @@
 
 package confmodel
 
+import (
+	"math"
+	"math/rand"
+)
+
 type Generator struct {
 	Id              int32
 	AssetId         int32
@@ -24,4 +29,38 @@ type Generator struct {
 	MaxValue        float64
 	IntervalSeconds int32
 	Frequency       float64
+	ElapsedTime     float64
+}
+
+func (dg *Generator) Generate() map[string]any {
+	var value any
+	switch dg.FunctionType {
+	case "boolean":
+		value = dg.generateBooleanData()
+	case "sin_wave":
+		value = dg.generateSinWaveData()
+	case "sawtooth_wave":
+		value = dg.generateSawtoothWaveData()
+	}
+
+	dg.ElapsedTime += float64(dg.IntervalSeconds)
+	return map[string]any{
+		dg.Attribute: value,
+	}
+}
+
+func (dg *Generator) generateBooleanData() bool {
+	return rand.Intn(2) == 0
+}
+
+func (dg *Generator) generateSinWaveData() float64 {
+	amplitude := (dg.MaxValue - dg.MinValue) / 2
+	offset := dg.MinValue + amplitude
+	return amplitude*math.Sin(2*math.Pi*dg.Frequency*dg.ElapsedTime) + offset
+}
+
+func (dg *Generator) generateSawtoothWaveData() float64 {
+	period := 1 / dg.Frequency
+	fraction := dg.ElapsedTime / period
+	return dg.MinValue + (dg.MaxValue-dg.MinValue)*(fraction-math.Floor(fraction))
 }

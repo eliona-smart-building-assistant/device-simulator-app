@@ -101,6 +101,7 @@ func toAppGenerator(dbGenerator *appdb.Generator) confmodel.Generator {
 		MaxValue:        dbGenerator.MaxValue,
 		IntervalSeconds: dbGenerator.IntervalSeconds,
 		Frequency:       dbGenerator.Frequency,
+		StartTime:       dbGenerator.InitializedAt,
 	}
 }
 

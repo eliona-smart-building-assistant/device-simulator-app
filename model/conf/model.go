@@ -16,8 +16,10 @@
 package confmodel
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
+	"time"
 )
 
 type Generator struct {
@@ -31,7 +33,7 @@ type Generator struct {
 	MaxValue        float64
 	IntervalSeconds int32
 	Frequency       float64
-	ElapsedTime     float64
+	StartTime       time.Time
 }
 
 func (dg *Generator) Generate() map[string]any {
@@ -45,7 +47,6 @@ func (dg *Generator) Generate() map[string]any {
 		value = dg.generateSawtoothWaveData()
 	}
 
-	dg.ElapsedTime += float64(dg.IntervalSeconds)
 	return map[string]any{
 		dg.Attribute: value,
 	}
@@ -58,11 +59,16 @@ func (dg *Generator) generateBooleanData() bool {
 func (dg *Generator) generateSinWaveData() float64 {
 	amplitude := (dg.MaxValue - dg.MinValue) / 2
 	offset := dg.MinValue + amplitude
-	return amplitude*math.Sin(2*math.Pi*dg.Frequency*dg.ElapsedTime) + offset
+	fmt.Println(amplitude, offset)
+	return amplitude*math.Sin(2*math.Pi*dg.Frequency*dg.getElapsedTime()) + offset
 }
 
 func (dg *Generator) generateSawtoothWaveData() float64 {
 	period := 1 / dg.Frequency
-	fraction := dg.ElapsedTime / period
+	fraction := dg.getElapsedTime() / period
 	return dg.MinValue + (dg.MaxValue-dg.MinValue)*(fraction-math.Floor(fraction))
+}
+
+func (dg *Generator) getElapsedTime() float64 {
+	return time.Since(dg.StartTime).Seconds()
 }

@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS device_simulator.generator
     min_value           DOUBLE PRECISION NOT NULL, -- Minimum value for the generated data
     max_value           DOUBLE PRECISION NOT NULL, -- Maximum value for the generated data
     interval_seconds    INTEGER NOT NULL,          -- Interval in seconds for data generation
-    frequency           DOUBLE PRECISION NOT NULL  -- Frequency for wave functions or duty cycle
+    frequency           DOUBLE PRECISION NOT NULL, -- Frequency for wave functions or duty cycle
+    initialized_at      TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 -- There is a transaction started in app.Init(). We need to commit to make the

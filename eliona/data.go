@@ -18,8 +18,8 @@ func UpsertAssetData(generator confmodel.Generator, data map[string]any) error {
 		AssetId:         generator.AssetId,
 		Data:            data,
 		ClientReference: *api.NewNullableString(&cr),
-		Subtype:         api.DataSubtype(cr),
-		// todo
+		Subtype:         api.DataSubtype(generator.Subtype),
+		// AssetTypeName:   *api.NewNullableString(&cr), // todo
 	}
 	if err := asset.UpsertDataIfAssetExists(d); err != nil {
 		return fmt.Errorf("upserting data: %v", err)

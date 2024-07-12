@@ -24,6 +24,7 @@ type Generator struct {
 	Id              int32
 	AssetId         int32
 	Attribute       string
+	Subtype         string
 	FunctionType    string
 	MinValue        float64
 	MaxValue        float64

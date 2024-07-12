@@ -16,6 +16,8 @@ type Generator struct {
 
 	Attribute string `json:"attribute"`
 
+	Subtype string `json:"subtype,omitempty"`
+
 	FunctionType string `json:"function_type"`
 
 	MinValue float64 `json:"min_value"`

@@ -30,7 +30,7 @@ var ErrBadRequest = errors.New("bad request")
 var ErrNotFound = errors.New("not found")
 
 func InsertConfig(ctx context.Context, config confmodel.Generator) (confmodel.Generator, error) {
-	dbGenerator := toDbGenerator(ctx, config)
+	dbGenerator := toDbGenerator(config)
 	if err := dbGenerator.InsertG(ctx, boil.Infer()); err != nil {
 		return confmodel.Generator{}, fmt.Errorf("inserting DB config: %v", err)
 	}
@@ -38,7 +38,7 @@ func InsertConfig(ctx context.Context, config confmodel.Generator) (confmodel.Ge
 }
 
 func UpsertConfig(ctx context.Context, config confmodel.Generator) (confmodel.Generator, error) {
-	dbGenerator := toDbGenerator(ctx, config)
+	dbGenerator := toDbGenerator(config)
 	if err := dbGenerator.UpsertG(ctx, true, []string{"id"}, boil.Blacklist("id"), boil.Infer()); err != nil {
 		return confmodel.Generator{}, fmt.Errorf("inserting DB config: %v", err)
 	}
@@ -74,7 +74,7 @@ func DeleteGenerator(ctx context.Context, configID int64) error {
 	return nil
 }
 
-func toDbGenerator(ctx context.Context, appGenerator confmodel.Generator) appdb.Generator {
+func toDbGenerator(appGenerator confmodel.Generator) appdb.Generator {
 	return appdb.Generator{
 		ID:              int64(appGenerator.Id),
 		AssetID:         appGenerator.AssetId,

@@ -20,15 +20,15 @@
 SET SCHEMA 'public';
 
 DELETE FROM versioning.patches
-WHERE device_simulator = 'device-simulator';
+WHERE app_name = 'device-simulator';
 
-INSERT INTO public.eliona_store (device_simulator, category, version)
+INSERT INTO public.eliona_store (app_name, category, version)
 VALUES ('device-simulator', 'app', 'v0.0.0')
-ON CONFLICT (device_simulator) DO UPDATE SET version = 'v0.0.0';
+ON CONFLICT (app_name) DO UPDATE SET version = 'v0.0.0';
 
-INSERT INTO public.eliona_app (device_simulator, enable)
+INSERT INTO public.eliona_app (app_name, enable)
 VALUES ('device-simulator', 't')
-ON CONFLICT (device_simulator) DO UPDATE SET initialized_at = null;
+ON CONFLICT (app_name) DO UPDATE SET initialized_at = null;
 
 DROP SCHEMA IF EXISTS device_simulator CASCADE;
 
@@ -66,5 +66,5 @@ WHERE dashboard_id IN (
 DELETE FROM public.dashboard
 WHERE name LIKE 'Device Simulator%';
 
--- DELETE FROM eliona_app WHERE device_simulator = 'device_simulator';
--- DELETE FROM eliona_store WHERE device_simulator = 'device_simulator';
+-- DELETE FROM eliona_app WHERE app_name = 'device_simulator';
+-- DELETE FROM eliona_store WHERE app_name = 'device_simulator';

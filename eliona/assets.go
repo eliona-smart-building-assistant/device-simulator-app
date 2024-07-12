@@ -22,6 +22,9 @@ import (
 )
 
 func GetAssetType(ctx context.Context, assetID int32) (string, error) {
-	asset, _, err := client.NewClient().AssetsAPI.GetAssetById(ctx, assetID).Execute()
-	return asset.AssetType, err
+	asset, _, err := client.NewClient().AssetsAPI.GetAssetById(client.AuthenticationContextWrap(ctx), assetID).Execute()
+	if err != nil {
+		return "", err
+	}
+	return asset.AssetType, nil
 }

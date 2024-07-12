@@ -18,6 +18,8 @@ package apiservices
 import (
 	"context"
 	"device-simulator/apiserver"
+	"device-simulator/conf"
+	confmodel "device-simulator/model/conf"
 	"errors"
 	"net/http"
 )
@@ -35,64 +37,86 @@ func NewConfigurationAPIService() apiserver.ConfigurationAPIServicer {
 
 // GeneratorsGet - List all generators
 func (s *ConfigurationAPIService) GeneratorsGet(ctx context.Context) (apiserver.ImplResponse, error) {
-	// TODO - update GeneratorsGet with the required logic for this service method.
-	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-
-	// TODO: Uncomment the next line to return response Response(200, []Generator{}) or use other options such as http.Ok ...
-	// return apiserver.Response(200, []Generator{}), nil
-
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsGet method not implemented")
+	appGenerators, err := conf.GetGenerators(ctx)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	var generators []apiserver.Generator
+	for _, appGenerator := range appGenerators {
+		generators = append(generators, toAPIGenerator(appGenerator))
+	}
+	return apiserver.Response(http.StatusOK, generators), nil
 }
 
 // GeneratorsIdDelete - Delete a generator by ID
 func (s *ConfigurationAPIService) GeneratorsIdDelete(ctx context.Context, id int32) (apiserver.ImplResponse, error) {
-	// TODO - update GeneratorsIdDelete with the required logic for this service method.
-	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-
-	// TODO: Uncomment the next line to return response Response(204, {}) or use other options such as http.Ok ...
-	// return apiserver.Response(204, nil),nil
-
-	// TODO: Uncomment the next line to return response Response(404, {}) or use other options such as http.Ok ...
-	// return apiserver.Response(404, nil),nil
-
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsIdDelete method not implemented")
+	err := conf.DeleteGenerator(ctx, int64(id))
+	if errors.Is(err, conf.ErrNotFound) {
+		return apiserver.ImplResponse{Code: http.StatusNotFound}, nil
+	}
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.ImplResponse{Code: http.StatusNoContent}, nil
 }
 
 // GeneratorsIdGet - Get a generator by ID
 func (s *ConfigurationAPIService) GeneratorsIdGet(ctx context.Context, id int32) (apiserver.ImplResponse, error) {
-	// TODO - update GeneratorsIdGet with the required logic for this service method.
-	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-
-	// TODO: Uncomment the next line to return response Response(200, Generator{}) or use other options such as http.Ok ...
-	// return apiserver.Response(200, Generator{}), nil
-
-	// TODO: Uncomment the next line to return response Response(404, {}) or use other options such as http.Ok ...
-	// return apiserver.Response(404, nil),nil
-
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsIdGet method not implemented")
+	generator, err := conf.GetGenerator(ctx, int64(id))
+	if errors.Is(err, conf.ErrNotFound) {
+		return apiserver.ImplResponse{Code: http.StatusNotFound}, nil
+	}
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.Response(http.StatusOK, toAPIGenerator(generator)), nil
 }
 
 // GeneratorsIdPut - Update a generator by ID
 func (s *ConfigurationAPIService) GeneratorsIdPut(ctx context.Context, id int32, generator apiserver.Generator) (apiserver.ImplResponse, error) {
-	// TODO - update GeneratorsIdPut with the required logic for this service method.
-	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-
-	// TODO: Uncomment the next line to return response Response(200, {}) or use other options such as http.Ok ...
-	// return apiserver.Response(200, nil),nil
-
-	// TODO: Uncomment the next line to return response Response(404, {}) or use other options such as http.Ok ...
-	// return apiserver.Response(404, nil),nil
-
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsIdPut method not implemented")
+	generator.Id = id
+	appGenerator := toAppGenerator(generator)
+	upsertedGenerator, err := conf.UpsertGenerator(ctx, appGenerator)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.Response(http.StatusCreated, toAPIGenerator(upsertedGenerator)), nil
 }
 
 // GeneratorsPost - Create a new generator
 func (s *ConfigurationAPIService) GeneratorsPost(ctx context.Context, generator apiserver.Generator) (apiserver.ImplResponse, error) {
-	// TODO - update GeneratorsPost with the required logic for this service method.
-	// Add api_configuration_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+	appGenerator := toAppGenerator(generator)
+	insertedGenerator, err := conf.InsertGenerator(ctx, appGenerator)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
+	return apiserver.Response(http.StatusCreated, toAPIGenerator(insertedGenerator)), nil
+}
 
-	// TODO: Uncomment the next line to return response Response(201, {}) or use other options such as http.Ok ...
-	// return apiserver.Response(201, nil),nil
+func toAPIGenerator(appGenerator confmodel.Generator) apiserver.Generator {
+	return apiserver.Generator{
+		Id:              int32(appGenerator.Id),
+		AssetId:         appGenerator.AssetId,
+		Attribute:       appGenerator.Attribute,
+		Subtype:         appGenerator.Subtype,
+		FunctionType:    appGenerator.FunctionType,
+		MinValue:        appGenerator.MinValue,
+		MaxValue:        appGenerator.MaxValue,
+		IntervalSeconds: appGenerator.IntervalSeconds,
+		Frequency:       appGenerator.Frequency,
+	}
+}
 
-	return apiserver.Response(http.StatusNotImplemented, nil), errors.New("GeneratorsPost method not implemented")
+func toAppGenerator(apiGenerator apiserver.Generator) confmodel.Generator {
+	return confmodel.Generator{
+		Id:              int32(apiGenerator.Id),
+		AssetId:         apiGenerator.AssetId,
+		Attribute:       apiGenerator.Attribute,
+		Subtype:         apiGenerator.Subtype,
+		FunctionType:    apiGenerator.FunctionType,
+		MinValue:        apiGenerator.MinValue,
+		MaxValue:        apiGenerator.MaxValue,
+		IntervalSeconds: apiGenerator.IntervalSeconds,
+		Frequency:       apiGenerator.Frequency,
+	}
 }

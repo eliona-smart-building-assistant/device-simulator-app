@@ -29,44 +29,44 @@ import (
 var ErrBadRequest = errors.New("bad request")
 var ErrNotFound = errors.New("not found")
 
-func InsertConfig(ctx context.Context, config confmodel.Generator) (confmodel.Generator, error) {
-	dbGenerator := toDbGenerator(config)
+func InsertGenerator(ctx context.Context, generator confmodel.Generator) (confmodel.Generator, error) {
+	dbGenerator := toDbGenerator(generator)
 	if err := dbGenerator.InsertG(ctx, boil.Infer()); err != nil {
-		return confmodel.Generator{}, fmt.Errorf("inserting DB config: %v", err)
+		return confmodel.Generator{}, fmt.Errorf("inserting DB generator: %v", err)
 	}
-	return config, nil
+	return generator, nil
 }
 
-func UpsertConfig(ctx context.Context, config confmodel.Generator) (confmodel.Generator, error) {
-	dbGenerator := toDbGenerator(config)
+func UpsertGenerator(ctx context.Context, generator confmodel.Generator) (confmodel.Generator, error) {
+	dbGenerator := toDbGenerator(generator)
 	if err := dbGenerator.UpsertG(ctx, true, []string{"id"}, boil.Blacklist("id"), boil.Infer()); err != nil {
-		return confmodel.Generator{}, fmt.Errorf("inserting DB config: %v", err)
+		return confmodel.Generator{}, fmt.Errorf("inserting DB generator: %v", err)
 	}
-	return config, nil
+	return generator, nil
 }
 
-func GetGenerator(ctx context.Context, configID int64) (confmodel.Generator, error) {
+func GetGenerator(ctx context.Context, generatorID int64) (confmodel.Generator, error) {
 	dbGenerator, err := appdb.Generators(
-		appdb.GeneratorWhere.ID.EQ(configID),
+		appdb.GeneratorWhere.ID.EQ(generatorID),
 	).OneG(ctx)
 	if errors.Is(err, sql.ErrNoRows) {
 		return confmodel.Generator{}, ErrNotFound
 	}
 	if err != nil {
-		return confmodel.Generator{}, fmt.Errorf("fetching config from database: %v", err)
+		return confmodel.Generator{}, fmt.Errorf("fetching generator from database: %v", err)
 	}
 	return toAppGenerator(dbGenerator), nil
 }
 
-func DeleteGenerator(ctx context.Context, configID int64) error {
+func DeleteGenerator(ctx context.Context, generatorID int64) error {
 	count, err := appdb.Generators(
-		appdb.GeneratorWhere.ID.EQ(configID),
+		appdb.GeneratorWhere.ID.EQ(generatorID),
 	).DeleteAllG(ctx)
 	if err != nil {
-		return fmt.Errorf("deleting config from database: %v", err)
+		return fmt.Errorf("deleting generator from database: %v", err)
 	}
 	if count > 1 {
-		return fmt.Errorf("shouldn't happen: deleted more (%v) configs by ID", count)
+		return fmt.Errorf("shouldn't happen: deleted more (%v) generators by ID", count)
 	}
 	if count == 0 {
 		return ErrNotFound

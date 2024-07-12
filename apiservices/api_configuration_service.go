@@ -19,8 +19,10 @@ import (
 	"context"
 	"device-simulator/apiserver"
 	"device-simulator/conf"
+	"device-simulator/eliona"
 	confmodel "device-simulator/model/conf"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -75,7 +77,10 @@ func (s *ConfigurationAPIService) GeneratorsIdGet(ctx context.Context, id int32)
 // GeneratorsIdPut - Update a generator by ID
 func (s *ConfigurationAPIService) GeneratorsIdPut(ctx context.Context, id int32, generator apiserver.Generator) (apiserver.ImplResponse, error) {
 	generator.Id = id
-	appGenerator := toAppGenerator(generator)
+	appGenerator, err := toAppGenerator(ctx, generator)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
 	upsertedGenerator, err := conf.UpsertGenerator(ctx, appGenerator)
 	if err != nil {
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
@@ -85,7 +90,10 @@ func (s *ConfigurationAPIService) GeneratorsIdPut(ctx context.Context, id int32,
 
 // GeneratorsPost - Create a new generator
 func (s *ConfigurationAPIService) GeneratorsPost(ctx context.Context, generator apiserver.Generator) (apiserver.ImplResponse, error) {
-	appGenerator := toAppGenerator(generator)
+	appGenerator, err := toAppGenerator(ctx, generator)
+	if err != nil {
+		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
+	}
 	insertedGenerator, err := conf.InsertGenerator(ctx, appGenerator)
 	if err != nil {
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
@@ -107,16 +115,21 @@ func toAPIGenerator(appGenerator confmodel.Generator) apiserver.Generator {
 	}
 }
 
-func toAppGenerator(apiGenerator apiserver.Generator) confmodel.Generator {
+func toAppGenerator(ctx context.Context, apiGenerator apiserver.Generator) (confmodel.Generator, error) {
+	assetTypeName, err := eliona.GetAssetType(ctx, apiGenerator.AssetId)
+	if err != nil {
+		return confmodel.Generator{}, fmt.Errorf("getting asset type name: %v", err)
+	}
 	return confmodel.Generator{
 		Id:              int32(apiGenerator.Id),
 		AssetId:         apiGenerator.AssetId,
 		Attribute:       apiGenerator.Attribute,
 		Subtype:         apiGenerator.Subtype,
+		AssetType:       assetTypeName,
 		FunctionType:    apiGenerator.FunctionType,
 		MinValue:        apiGenerator.MinValue,
 		MaxValue:        apiGenerator.MaxValue,
 		IntervalSeconds: apiGenerator.IntervalSeconds,
 		Frequency:       apiGenerator.Frequency,
-	}
+	}, nil
 }

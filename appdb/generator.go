@@ -27,6 +27,7 @@ type Generator struct {
 	AssetID         int32   `boil:"asset_id" json:"asset_id" toml:"asset_id" yaml:"asset_id"`
 	Attribute       string  `boil:"attribute" json:"attribute" toml:"attribute" yaml:"attribute"`
 	Subtype         string  `boil:"subtype" json:"subtype" toml:"subtype" yaml:"subtype"`
+	AssetType       string  `boil:"asset_type" json:"asset_type" toml:"asset_type" yaml:"asset_type"`
 	FunctionType    string  `boil:"function_type" json:"function_type" toml:"function_type" yaml:"function_type"`
 	MinValue        float64 `boil:"min_value" json:"min_value" toml:"min_value" yaml:"min_value"`
 	MaxValue        float64 `boil:"max_value" json:"max_value" toml:"max_value" yaml:"max_value"`
@@ -42,6 +43,7 @@ var GeneratorColumns = struct {
 	AssetID         string
 	Attribute       string
 	Subtype         string
+	AssetType       string
 	FunctionType    string
 	MinValue        string
 	MaxValue        string
@@ -52,6 +54,7 @@ var GeneratorColumns = struct {
 	AssetID:         "asset_id",
 	Attribute:       "attribute",
 	Subtype:         "subtype",
+	AssetType:       "asset_type",
 	FunctionType:    "function_type",
 	MinValue:        "min_value",
 	MaxValue:        "max_value",
@@ -64,6 +67,7 @@ var GeneratorTableColumns = struct {
 	AssetID         string
 	Attribute       string
 	Subtype         string
+	AssetType       string
 	FunctionType    string
 	MinValue        string
 	MaxValue        string
@@ -74,6 +78,7 @@ var GeneratorTableColumns = struct {
 	AssetID:         "generator.asset_id",
 	Attribute:       "generator.attribute",
 	Subtype:         "generator.subtype",
+	AssetType:       "generator.asset_type",
 	FunctionType:    "generator.function_type",
 	MinValue:        "generator.min_value",
 	MaxValue:        "generator.max_value",
@@ -190,6 +195,7 @@ var GeneratorWhere = struct {
 	AssetID         whereHelperint32
 	Attribute       whereHelperstring
 	Subtype         whereHelperstring
+	AssetType       whereHelperstring
 	FunctionType    whereHelperstring
 	MinValue        whereHelperfloat64
 	MaxValue        whereHelperfloat64
@@ -200,6 +206,7 @@ var GeneratorWhere = struct {
 	AssetID:         whereHelperint32{field: "\"device_simulator\".\"generator\".\"asset_id\""},
 	Attribute:       whereHelperstring{field: "\"device_simulator\".\"generator\".\"attribute\""},
 	Subtype:         whereHelperstring{field: "\"device_simulator\".\"generator\".\"subtype\""},
+	AssetType:       whereHelperstring{field: "\"device_simulator\".\"generator\".\"asset_type\""},
 	FunctionType:    whereHelperstring{field: "\"device_simulator\".\"generator\".\"function_type\""},
 	MinValue:        whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"min_value\""},
 	MaxValue:        whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"max_value\""},
@@ -224,8 +231,8 @@ func (*generatorR) NewStruct() *generatorR {
 type generatorL struct{}
 
 var (
-	generatorAllColumns            = []string{"id", "asset_id", "attribute", "subtype", "function_type", "min_value", "max_value", "interval_seconds", "frequency"}
-	generatorColumnsWithoutDefault = []string{"asset_id", "attribute", "subtype", "function_type", "min_value", "max_value", "interval_seconds", "frequency"}
+	generatorAllColumns            = []string{"id", "asset_id", "attribute", "subtype", "asset_type", "function_type", "min_value", "max_value", "interval_seconds", "frequency"}
+	generatorColumnsWithoutDefault = []string{"asset_id", "attribute", "subtype", "asset_type", "function_type", "min_value", "max_value", "interval_seconds", "frequency"}
 	generatorColumnsWithDefault    = []string{"id"}
 	generatorPrimaryKeyColumns     = []string{"id"}
 	generatorGeneratedColumns      = []string{}

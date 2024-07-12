@@ -14,3 +14,14 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package eliona
+
+import (
+	"context"
+
+	"github.com/eliona-smart-building-assistant/go-eliona/client"
+)
+
+func GetAssetType(ctx context.Context, assetID int32) (string, error) {
+	asset, _, err := client.NewClient().AssetsAPI.GetAssetById(ctx, assetID).Execute()
+	return asset.AssetType, err
+}

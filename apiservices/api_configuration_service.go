@@ -110,6 +110,7 @@ func toAPIGenerator(appGenerator confmodel.Generator) apiserver.Generator {
 		FunctionType:    appGenerator.FunctionType,
 		MinValue:        appGenerator.MinValue,
 		MaxValue:        appGenerator.MaxValue,
+		Integer:         appGenerator.Integer,
 		IntervalSeconds: appGenerator.IntervalSeconds,
 		Frequency:       appGenerator.Frequency,
 	}
@@ -129,6 +130,7 @@ func toAppGenerator(ctx context.Context, apiGenerator apiserver.Generator) (conf
 		FunctionType:    apiGenerator.FunctionType,
 		MinValue:        apiGenerator.MinValue,
 		MaxValue:        apiGenerator.MaxValue,
+		Integer:         apiGenerator.Integer,
 		IntervalSeconds: apiGenerator.IntervalSeconds,
 		Frequency:       apiGenerator.Frequency,
 	}, nil

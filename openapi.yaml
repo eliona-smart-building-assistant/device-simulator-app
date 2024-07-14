@@ -196,6 +196,9 @@ components:
         max_value:
           type: number
           format: double
+        integer:
+          type: boolean
+          description: Specifies whether the returned number should be an integer or a rational number.
         interval_seconds:
           type: integer
         frequency:

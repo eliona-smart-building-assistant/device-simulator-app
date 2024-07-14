@@ -30,20 +30,27 @@ type Generator struct {
 	FunctionType    string
 	MinValue        float64
 	MaxValue        float64
+	Integer         bool
 	IntervalSeconds int32
 	Frequency       float64
 	StartTime       time.Time
 }
 
 func (dg *Generator) Generate() map[string]any {
-	var value float64
+	var floatVal float64
 	switch dg.FunctionType {
 	case "random":
-		value = dg.generateRandomData()
+		floatVal = dg.generateRandomData()
 	case "sin_wave":
-		value = dg.generateSinWaveData()
+		floatVal = dg.generateSinWaveData()
 	case "sawtooth_wave":
-		value = dg.generateSawtoothWaveData()
+		floatVal = dg.generateSawtoothWaveData()
+	}
+
+	var value any
+	value = floatVal
+	if dg.Integer {
+		value = int64(math.Round(floatVal))
 	}
 
 	return map[string]any{

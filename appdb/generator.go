@@ -31,6 +31,7 @@ type Generator struct {
 	FunctionType    string    `boil:"function_type" json:"function_type" toml:"function_type" yaml:"function_type"`
 	MinValue        float64   `boil:"min_value" json:"min_value" toml:"min_value" yaml:"min_value"`
 	MaxValue        float64   `boil:"max_value" json:"max_value" toml:"max_value" yaml:"max_value"`
+	Integer         bool      `boil:"integer" json:"integer" toml:"integer" yaml:"integer"`
 	IntervalSeconds int32     `boil:"interval_seconds" json:"interval_seconds" toml:"interval_seconds" yaml:"interval_seconds"`
 	Frequency       float64   `boil:"frequency" json:"frequency" toml:"frequency" yaml:"frequency"`
 	InitializedAt   time.Time `boil:"initialized_at" json:"initialized_at" toml:"initialized_at" yaml:"initialized_at"`
@@ -48,6 +49,7 @@ var GeneratorColumns = struct {
 	FunctionType    string
 	MinValue        string
 	MaxValue        string
+	Integer         string
 	IntervalSeconds string
 	Frequency       string
 	InitializedAt   string
@@ -60,6 +62,7 @@ var GeneratorColumns = struct {
 	FunctionType:    "function_type",
 	MinValue:        "min_value",
 	MaxValue:        "max_value",
+	Integer:         "integer",
 	IntervalSeconds: "interval_seconds",
 	Frequency:       "frequency",
 	InitializedAt:   "initialized_at",
@@ -74,6 +77,7 @@ var GeneratorTableColumns = struct {
 	FunctionType    string
 	MinValue        string
 	MaxValue        string
+	Integer         string
 	IntervalSeconds string
 	Frequency       string
 	InitializedAt   string
@@ -86,6 +90,7 @@ var GeneratorTableColumns = struct {
 	FunctionType:    "generator.function_type",
 	MinValue:        "generator.min_value",
 	MaxValue:        "generator.max_value",
+	Integer:         "generator.integer",
 	IntervalSeconds: "generator.interval_seconds",
 	Frequency:       "generator.frequency",
 	InitializedAt:   "generator.initialized_at",
@@ -195,6 +200,15 @@ func (w whereHelperfloat64) NIN(slice []float64) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
+type whereHelperbool struct{ field string }
+
+func (w whereHelperbool) EQ(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelperbool) NEQ(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelperbool) LT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelperbool) LTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelperbool) GT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelperbool) GTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
+
 type whereHelpertime_Time struct{ field string }
 
 func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
@@ -225,6 +239,7 @@ var GeneratorWhere = struct {
 	FunctionType    whereHelperstring
 	MinValue        whereHelperfloat64
 	MaxValue        whereHelperfloat64
+	Integer         whereHelperbool
 	IntervalSeconds whereHelperint32
 	Frequency       whereHelperfloat64
 	InitializedAt   whereHelpertime_Time
@@ -237,6 +252,7 @@ var GeneratorWhere = struct {
 	FunctionType:    whereHelperstring{field: "\"device_simulator\".\"generator\".\"function_type\""},
 	MinValue:        whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"min_value\""},
 	MaxValue:        whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"max_value\""},
+	Integer:         whereHelperbool{field: "\"device_simulator\".\"generator\".\"integer\""},
 	IntervalSeconds: whereHelperint32{field: "\"device_simulator\".\"generator\".\"interval_seconds\""},
 	Frequency:       whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"frequency\""},
 	InitializedAt:   whereHelpertime_Time{field: "\"device_simulator\".\"generator\".\"initialized_at\""},
@@ -259,8 +275,8 @@ func (*generatorR) NewStruct() *generatorR {
 type generatorL struct{}
 
 var (
-	generatorAllColumns            = []string{"id", "asset_id", "attribute", "subtype", "asset_type", "function_type", "min_value", "max_value", "interval_seconds", "frequency", "initialized_at"}
-	generatorColumnsWithoutDefault = []string{"asset_id", "attribute", "subtype", "asset_type", "function_type", "min_value", "max_value", "interval_seconds", "frequency"}
+	generatorAllColumns            = []string{"id", "asset_id", "attribute", "subtype", "asset_type", "function_type", "min_value", "max_value", "integer", "interval_seconds", "frequency", "initialized_at"}
+	generatorColumnsWithoutDefault = []string{"asset_id", "attribute", "subtype", "asset_type", "function_type", "min_value", "max_value", "integer", "interval_seconds", "frequency"}
 	generatorColumnsWithDefault    = []string{"id", "initialized_at"}
 	generatorPrimaryKeyColumns     = []string{"id"}
 	generatorGeneratedColumns      = []string{}

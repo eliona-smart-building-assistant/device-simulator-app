@@ -84,6 +84,7 @@ func toDbGenerator(appGenerator confmodel.Generator) appdb.Generator {
 		AssetType:       appGenerator.AssetType,
 		MinValue:        appGenerator.MinValue,
 		MaxValue:        appGenerator.MaxValue,
+		Integer:         appGenerator.Integer,
 		Frequency:       appGenerator.Frequency,
 		IntervalSeconds: appGenerator.IntervalSeconds,
 	}
@@ -99,6 +100,7 @@ func toAppGenerator(dbGenerator *appdb.Generator) confmodel.Generator {
 		AssetType:       dbGenerator.AssetType,
 		MinValue:        dbGenerator.MinValue,
 		MaxValue:        dbGenerator.MaxValue,
+		Integer:         dbGenerator.Integer,
 		IntervalSeconds: dbGenerator.IntervalSeconds,
 		Frequency:       dbGenerator.Frequency,
 		StartTime:       dbGenerator.InitializedAt,

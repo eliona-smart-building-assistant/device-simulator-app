@@ -16,7 +16,6 @@
 package confmodel
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 	"time"
@@ -59,7 +58,6 @@ func (dg *Generator) generateBooleanData() bool {
 func (dg *Generator) generateSinWaveData() float64 {
 	amplitude := (dg.MaxValue - dg.MinValue) / 2
 	offset := dg.MinValue + amplitude
-	fmt.Println(amplitude, offset)
 	return amplitude*math.Sin(2*math.Pi*dg.Frequency*dg.getElapsedTime()) + offset
 }
 

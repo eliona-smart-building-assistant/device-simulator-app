@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS device_simulator.generator
     attribute           TEXT NOT NULL,
     subtype             TEXT NOT NULL,
     asset_type          TEXT NOT NULL,
-    function_type       VARCHAR(50) NOT NULL,      -- Type of function (e.g., "boolean", "sin_wave", "sawtooth_wave")
+    function_type       VARCHAR(50) NOT NULL,      -- Type of function (e.g., "random", "sin_wave", "sawtooth_wave")
     min_value           DOUBLE PRECISION NOT NULL, -- Minimum value for the generated data
     max_value           DOUBLE PRECISION NOT NULL, -- Maximum value for the generated data
     interval_seconds    INTEGER NOT NULL,          -- Interval in seconds for data generation

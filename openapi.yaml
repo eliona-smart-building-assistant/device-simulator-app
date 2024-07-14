@@ -187,7 +187,7 @@ components:
         function_type:
           type: string
           enum:
-            - boolean
+            - random
             - sin_wave
             - sawtooth_wave
         min_value:

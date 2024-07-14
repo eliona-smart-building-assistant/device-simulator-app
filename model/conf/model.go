@@ -36,10 +36,10 @@ type Generator struct {
 }
 
 func (dg *Generator) Generate() map[string]any {
-	var value any
+	var value float64
 	switch dg.FunctionType {
-	case "boolean":
-		value = dg.generateBooleanData()
+	case "random":
+		value = dg.generateRandomData()
 	case "sin_wave":
 		value = dg.generateSinWaveData()
 	case "sawtooth_wave":
@@ -51,8 +51,9 @@ func (dg *Generator) Generate() map[string]any {
 	}
 }
 
-func (dg *Generator) generateBooleanData() bool {
-	return rand.Intn(2) == 0
+func (dg *Generator) generateRandomData() float64 {
+	rang := dg.MaxValue - dg.MinValue
+	return rand.Float64()*rang + dg.MinValue
 }
 
 func (dg *Generator) generateSinWaveData() float64 {

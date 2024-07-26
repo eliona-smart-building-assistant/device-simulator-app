@@ -31,7 +31,7 @@ type Generator struct {
 	MinValue        float64
 	MaxValue        float64
 	Integer         bool
-	IntervalSeconds int32
+	IntervalSeconds float64
 	Frequency       float64
 	StartTime       time.Time
 }

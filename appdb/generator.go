@@ -32,7 +32,7 @@ type Generator struct {
 	MinValue        float64   `boil:"min_value" json:"min_value" toml:"min_value" yaml:"min_value"`
 	MaxValue        float64   `boil:"max_value" json:"max_value" toml:"max_value" yaml:"max_value"`
 	Integer         bool      `boil:"integer" json:"integer" toml:"integer" yaml:"integer"`
-	IntervalSeconds int32     `boil:"interval_seconds" json:"interval_seconds" toml:"interval_seconds" yaml:"interval_seconds"`
+	IntervalSeconds float64   `boil:"interval_seconds" json:"interval_seconds" toml:"interval_seconds" yaml:"interval_seconds"`
 	Frequency       float64   `boil:"frequency" json:"frequency" toml:"frequency" yaml:"frequency"`
 	InitializedAt   time.Time `boil:"initialized_at" json:"initialized_at" toml:"initialized_at" yaml:"initialized_at"`
 
@@ -240,7 +240,7 @@ var GeneratorWhere = struct {
 	MinValue        whereHelperfloat64
 	MaxValue        whereHelperfloat64
 	Integer         whereHelperbool
-	IntervalSeconds whereHelperint32
+	IntervalSeconds whereHelperfloat64
 	Frequency       whereHelperfloat64
 	InitializedAt   whereHelpertime_Time
 }{
@@ -253,7 +253,7 @@ var GeneratorWhere = struct {
 	MinValue:        whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"min_value\""},
 	MaxValue:        whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"max_value\""},
 	Integer:         whereHelperbool{field: "\"device_simulator\".\"generator\".\"integer\""},
-	IntervalSeconds: whereHelperint32{field: "\"device_simulator\".\"generator\".\"interval_seconds\""},
+	IntervalSeconds: whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"interval_seconds\""},
 	Frequency:       whereHelperfloat64{field: "\"device_simulator\".\"generator\".\"frequency\""},
 	InitializedAt:   whereHelpertime_Time{field: "\"device_simulator\".\"generator\".\"initialized_at\""},
 }

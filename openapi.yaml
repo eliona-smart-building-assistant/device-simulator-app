@@ -200,7 +200,7 @@ components:
           type: boolean
           description: Specifies whether the returned number should be an integer or a rational number.
         interval_seconds:
-          type: integer
+          type: double
         frequency:
           type: number
           format: double

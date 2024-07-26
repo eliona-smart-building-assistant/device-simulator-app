@@ -27,7 +27,7 @@ type Generator struct {
 	// Specifies whether the returned number should be an integer or a rational number.
 	Integer bool `json:"integer,omitempty"`
 
-	IntervalSeconds int32 `json:"interval_seconds"`
+	IntervalSeconds float64 `json:"interval_seconds"`
 
 	Frequency float64 `json:"frequency"`
 }

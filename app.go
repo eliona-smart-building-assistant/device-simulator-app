@@ -49,6 +49,9 @@ func initialization() {
 		asset.InitAssetTypeFiles("resources/asset-types/*.json"),
 		dashboard.InitWidgetTypeFiles("resources/widget-types/*.json"),
 	)
+	app.Patch(conn, app.AppName(), "010100",
+		app.ExecSqlFile("conf/010100.sql"),
+	)
 }
 
 var once sync.Once

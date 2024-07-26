@@ -40,5 +40,5 @@ require (
 	golang.org/x/crypto v0.25.0 // indirect
 	golang.org/x/image v0.15.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
-	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
+	golang.org/x/xerrors v0.0.0-20240716161551-93cc26a95ae9 // indirect
 )

@@ -3,7 +3,7 @@ module device-simulator
 go 1.21
 
 require (
-	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.4
+	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.6
 	github.com/eliona-smart-building-assistant/go-eliona v1.9.39
 	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.6.12
 	github.com/eliona-smart-building-assistant/go-utils v1.1.1
@@ -34,11 +34,11 @@ require (
 	github.com/jackc/puddle v1.3.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/spf13/cast v1.6.0 // indirect
+	github.com/spf13/cast v1.7.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
-	golang.org/x/crypto v0.25.0 // indirect
-	golang.org/x/image v0.15.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/image v0.19.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240716161551-93cc26a95ae9 // indirect
 )

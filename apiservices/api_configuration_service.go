@@ -43,7 +43,7 @@ func (s *ConfigurationAPIService) GeneratorsGet(ctx context.Context) (apiserver.
 	if err != nil {
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
 	}
-	var generators []apiserver.Generator
+	generators := make([]apiserver.Generator, 0, len(appGenerators))
 	for _, appGenerator := range appGenerators {
 		generators = append(generators, toAPIGenerator(appGenerator))
 	}

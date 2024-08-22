@@ -1,4 +1,4 @@
 SET SCHEMA 'device_simulator';
 
-ALTER TABLE "generator"
-ALTER "interval_seconds" TYPE double precision;
+ALTER TABLE device_simulator.generator
+ALTER interval_seconds TYPE double precision;

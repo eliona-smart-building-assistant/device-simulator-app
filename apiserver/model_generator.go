@@ -20,28 +20,24 @@ type Generator struct {
 
 	FunctionType string `json:"function_type"`
 
-	MinValue float64 `json:"min_value"`
+	MinValue float64 `json:"min_value,omitempty"`
 
-	MaxValue float64 `json:"max_value"`
+	MaxValue float64 `json:"max_value,omitempty"`
 
 	// Specifies whether the returned number should be an integer or a rational number.
 	Integer bool `json:"integer,omitempty"`
 
-	IntervalSeconds float64 `json:"interval_seconds"`
+	IntervalSeconds float64 `json:"interval_seconds,omitempty"`
 
-	Frequency float64 `json:"frequency"`
+	Frequency float64 `json:"frequency,omitempty"`
 }
 
 // AssertGeneratorRequired checks if the required fields are not zero-ed
 func AssertGeneratorRequired(obj Generator) error {
 	elements := map[string]interface{}{
-		"asset_id":         obj.AssetId,
-		"attribute":        obj.Attribute,
-		"function_type":    obj.FunctionType,
-		"min_value":        obj.MinValue,
-		"max_value":        obj.MaxValue,
-		"interval_seconds": obj.IntervalSeconds,
-		"frequency":        obj.Frequency,
+		"asset_id":      obj.AssetId,
+		"attribute":     obj.Attribute,
+		"function_type": obj.FunctionType,
 	}
 	for name, el := range elements {
 		if isZero := IsZeroValue(el); isZero {

@@ -208,7 +208,3 @@ components:
         - asset_id
         - attribute
         - function_type
-        - min_value
-        - max_value
-        - interval_seconds
-        - frequency

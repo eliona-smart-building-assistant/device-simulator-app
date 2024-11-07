@@ -29,8 +29,8 @@ Generators can be created in Eliona under `Apps > Device Simulator > Settings` w
 | `min_value`       | Minimum value for the generated data.                                           |
 | `max_value`       | Maximum value for the generated data.                                           |
 | `integer`         | Specifies if the generated value should be an integer or float. (`true` for integer, `false` for float). |
-| `interval_seconds`| Interval in seconds for data generation.                                        |
-| `frequency`       | Frequency for wave functions or duty cycle.                                     |
+| `interval_seconds`| Interval in seconds for data generation. (Sampling rate) (How often should the new data be generated?) |
+| `frequency`       | Frequency in Hz for wave functions. (How often the function should reach the original value per second?) (typically less than 1) (Must not be higher than 1/(2*interval_seconds) to avoid aliasing / Nyquist frequency) |
 
 Example generator JSON:
 

@@ -23,6 +23,7 @@ import (
 
 type Generator struct {
 	Id              int32
+	TenantId        string
 	AssetId         int32
 	Attribute       string
 	Subtype         string

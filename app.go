@@ -26,10 +26,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/eliona-smart-building-assistant/go-eliona/app"
-	"github.com/eliona-smart-building-assistant/go-eliona/asset"
-	"github.com/eliona-smart-building-assistant/go-eliona/dashboard"
-	"github.com/eliona-smart-building-assistant/go-eliona/frontend"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/app"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/asset"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/dashboard"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/frontend"
 	"github.com/eliona-smart-building-assistant/go-utils/common"
 	"github.com/eliona-smart-building-assistant/go-utils/db"
 	utilshttp "github.com/eliona-smart-building-assistant/go-utils/http"
@@ -43,14 +43,23 @@ func initialization() {
 	conn := db.NewInitConnectionWithContextAndApplicationName(ctx, app.AppName())
 	defer conn.Close(ctx)
 
+	apiEndpoint := common.Getenv("API_ENDPOINT", "")
+	apiToken := common.Getenv("API_TOKEN", "")
+
 	// Init the app before the first run.
-	app.Init(conn, app.AppName(),
+	app.Init(
+		apiEndpoint,
+		apiToken,
+		conn, app.AppName(),
 		app.ExecSqlFile("conf/init.sql"),
-		asset.InitAssetTypeFiles("resources/asset-types/*.json"),
-		dashboard.InitWidgetTypeFiles("resources/widget-types/*.json"),
+		asset.InitAssetTypeFiles(apiEndpoint, apiToken, "resources/asset-types/*.json"),
+		dashboard.InitWidgetTypeFiles(apiEndpoint, apiToken, "resources/widget-types/*.json"),
 	)
-	app.Patch(conn, app.AppName(), "010100",
+	app.Patch(apiEndpoint, apiToken, conn, app.AppName(), "010100",
 		app.ExecSqlFile("conf/010100.sql"),
+	)
+	app.Patch(apiEndpoint, apiToken, conn, app.AppName(), "020000",
+		app.ExecSqlFile("conf/020000.sql"),
 	)
 }
 

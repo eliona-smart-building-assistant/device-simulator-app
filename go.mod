@@ -5,14 +5,15 @@ go 1.24
 toolchain go1.24.2
 
 require (
+	github.com/aarondl/sqlboiler/v4 v4.19.5
+	github.com/aarondl/strmangle v0.0.9
 	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.6
-	github.com/eliona-smart-building-assistant/go-eliona v1.10.9
-	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.9.4
-	github.com/eliona-smart-building-assistant/go-utils v1.1.7
+	github.com/eliona-smart-building-assistant/go-eliona-api-client/v3 v3.0.2
+	github.com/eliona-smart-building-assistant/go-eliona/v2 v2.0.0
+	github.com/eliona-smart-building-assistant/go-utils v1.1.10
 	github.com/friendsofgo/errors v0.9.2
 	github.com/gorilla/mux v1.8.1
 	github.com/volatiletech/sqlboiler/v4 v4.19.1
-	github.com/volatiletech/strmangle v0.0.8
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -21,9 +22,12 @@ require (
 replace github.com/ericlagergren/decimal => github.com/ericlagergren/decimal v0.0.0-20181231230500-73749d4874d5
 
 require (
+	github.com/aarondl/inflect v0.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/eliona-smart-building-assistant/go-eliona v1.9.39 // indirect
+	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.6.12 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.3 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.3 // indirect
@@ -37,8 +41,9 @@ require (
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/cast v1.9.2 // indirect
-	github.com/stretchr/testify v1.10.0 // indirect
+	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
+	github.com/volatiletech/strmangle v0.0.8 // indirect
 	golang.org/x/crypto v0.40.0 // indirect
 	golang.org/x/image v0.19.0 // indirect
 	golang.org/x/text v0.27.0 // indirect

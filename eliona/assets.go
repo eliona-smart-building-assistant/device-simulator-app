@@ -18,11 +18,12 @@ package eliona
 import (
 	"context"
 
-	"github.com/eliona-smart-building-assistant/go-eliona/client"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/client"
+	"github.com/eliona-smart-building-assistant/go-utils/common"
 )
 
 func GetAssetType(ctx context.Context, assetID int32) (string, error) {
-	asset, _, err := client.NewClient().AssetsAPI.GetAssetById(client.AuthenticationContextWrap(ctx), assetID).Execute()
+	asset, _, err := client.NewClient(common.Getenv("API_ENDPOINT", "")).AssetsAPI.GetAssetById(client.AuthenticationContextWrap(ctx, common.Getenv("API_TOKEN", "")), assetID).Execute()
 	if err != nil {
 		return "", err
 	}

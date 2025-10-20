@@ -172,7 +172,7 @@ func (c *ConfigurationAPIController) GeneratorsIdPut(w http.ResponseWriter, r *h
 func (c *ConfigurationAPIController) GeneratorsPost(w http.ResponseWriter, r *http.Request) {
 	generatorParam := Generator{}
 	d := json.NewDecoder(r.Body)
-	d.DisallowUnknownFields()
+	//d.DisallowUnknownFields()
 	if err := d.Decode(&generatorParam); err != nil {
 		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
 		return

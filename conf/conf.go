@@ -23,7 +23,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/aarondl/sqlboiler/v4/boil"
 )
 
 var ErrBadRequest = errors.New("bad request")
@@ -77,6 +77,7 @@ func DeleteGenerator(ctx context.Context, generatorID int64) error {
 func toDbGenerator(appGenerator confmodel.Generator) appdb.Generator {
 	return appdb.Generator{
 		ID:              int64(appGenerator.Id),
+		TenantID:        appGenerator.TenantId,
 		AssetID:         appGenerator.AssetId,
 		Attribute:       appGenerator.Attribute,
 		Subtype:         appGenerator.Subtype,
@@ -93,6 +94,7 @@ func toDbGenerator(appGenerator confmodel.Generator) appdb.Generator {
 func toAppGenerator(dbGenerator *appdb.Generator) confmodel.Generator {
 	return confmodel.Generator{
 		Id:              int32(dbGenerator.ID),
+		TenantId:        dbGenerator.TenantID,
 		AssetId:         dbGenerator.AssetID,
 		Attribute:       dbGenerator.Attribute,
 		Subtype:         dbGenerator.Subtype,

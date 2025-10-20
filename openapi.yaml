@@ -178,6 +178,8 @@ components:
         id:
           type: integer
           readOnly: true
+        tenant_id:
+          type: string
         asset_id:
           type: integer
         attribute:

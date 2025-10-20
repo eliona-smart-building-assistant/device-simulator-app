@@ -19,6 +19,7 @@ create schema if not exists device_simulator;
 CREATE TABLE IF NOT EXISTS device_simulator.generator
 (
     id                  BIGSERIAL PRIMARY KEY,
+    tenant_id           uuid NOT NULL,
     asset_id            INTEGER NOT NULL,
     attribute           TEXT NOT NULL,
     subtype             TEXT NOT NULL,

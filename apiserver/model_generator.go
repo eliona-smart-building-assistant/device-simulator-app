@@ -12,6 +12,8 @@ package apiserver
 type Generator struct {
 	Id int32 `json:"id,omitempty"`
 
+	TenantId string `json:"tenant_id,omitempty"`
+
 	AssetId int32 `json:"asset_id"`
 
 	Attribute string `json:"attribute"`

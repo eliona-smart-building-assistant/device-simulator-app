@@ -104,6 +104,7 @@ func (s *ConfigurationAPIService) GeneratorsPost(ctx context.Context, generator 
 func toAPIGenerator(appGenerator confmodel.Generator) apiserver.Generator {
 	return apiserver.Generator{
 		Id:              int32(appGenerator.Id),
+		TenantId:        appGenerator.TenantId,
 		AssetId:         appGenerator.AssetId,
 		Attribute:       appGenerator.Attribute,
 		Subtype:         appGenerator.Subtype,
@@ -123,6 +124,7 @@ func toAppGenerator(ctx context.Context, apiGenerator apiserver.Generator) (conf
 	}
 	return confmodel.Generator{
 		Id:              int32(apiGenerator.Id),
+		TenantId:        apiGenerator.TenantId,
 		AssetId:         apiGenerator.AssetId,
 		Attribute:       apiGenerator.Attribute,
 		Subtype:         apiGenerator.Subtype,

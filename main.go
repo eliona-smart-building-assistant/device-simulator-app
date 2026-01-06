@@ -28,7 +28,7 @@ import (
 // The main function starts the app by starting all services necessary for this app and waits
 // until all services are finished.
 func main() {
-	log.Info("main", "Starting the app.")
+	log.Info("main", "Starting the app")
 
 	// Init Database
 	pool := conf.InitDefaultDB()
@@ -46,5 +46,5 @@ func main() {
 		listenApi,
 	)
 
-	log.Info("main", "Terminate the app.")
+	log.Info("main", "Terminate the app")
 }

@@ -1,45 +1,28 @@
-go install github.com/volatiletech/sqlboiler/v4@latest
-go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql@latest
+go install github.com/aarondl/sqlboiler/v4@latest
+go install github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-psql@latest
 
-go get github.com/volatiletech/sqlboiler/v4
-go get github.com/volatiletech/null/v8
+go get github.com/aarondl/sqlboiler/v4
+go get github.com/aarondl/null/v8
 
-# Read the content of init.sql
-INIT_SQL_CONTENT=$(<"${PWD}/conf/init.sql")
-
-# Create init_wrapper.sql to run the script in a transaction. This is needed for
-# COMMIT AND CHAIN to work in the script.
-cat << EOF > ./conf/init_wrapper.sql
-BEGIN;
-
-$INIT_SQL_CONTENT
-
-COMMIT;
-EOF
-
-docker run -d \
-    --name "app_sql_boiler_code_generation" \
-    --platform "linux/amd64" \
+docker run --rm -d \
+    --name "eliona_database_code_generation" \
     -e "POSTGRES_PASSWORD=secret" \
     -p "6001:5432" \
-    -v "${PWD}/conf/init_wrapper.sql:/docker-entrypoint-initdb.d/init_wrapper.sql" \
-    debezium/postgres:12
+    -v "${PWD}:/local" \
+    eliona.azurecr.io/core/postgres16:latest
 
-# Wait for PostgreSQL to initialize
-sleep 5
+docker run --rm \
+    --name "eliona_database_init_code_generation" \
+    -e "CONNECTION_STRING=postgres://postgres:secret@host.docker.internal:6001/postgres" \
+    -e "INIT_CONNECTION_STRING=postgres://postgres:secret@host.docker.internal:6001/postgres" \
+    eliona.azurecr.io/core/database:tenants
+
+docker image rm "eliona.azurecr.io/core/database:tenants"
 
 sqlboiler psql \
     -c sqlboiler.toml \
     --wipe --no-tests
 
-docker stop "app_sql_boiler_code_generation" > /dev/null
-
-docker logs "app_sql_boiler_code_generation" 2>&1 | grep "ERROR" || {
-    echo "All good."
-}
-
-docker rm "app_sql_boiler_code_generation" > /dev/null
-
-rm ./conf/init_wrapper.sql
+docker stop "eliona_database_code_generation"
 
 go mod tidy

@@ -23,7 +23,6 @@ import (
 
 type Generator struct {
 	Id              int32
-	TenantId        string
 	AssetId         int32
 	Attribute       string
 	Subtype         string
@@ -35,6 +34,10 @@ type Generator struct {
 	IntervalSeconds float64
 	Frequency       float64
 	StartTime       time.Time
+
+	ElionaTenantId string
+	ApiEndpoint    string
+	ApiKey         string
 }
 
 func (dg *Generator) Generate() map[string]any {

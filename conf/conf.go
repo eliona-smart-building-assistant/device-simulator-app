@@ -22,6 +22,11 @@ import (
 	confmodel "device-simulator/v2/model/conf"
 	"errors"
 	"fmt"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/app"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/client"
+	"github.com/eliona-smart-building-assistant/go-eliona/v2/frontend"
+	"github.com/google/uuid"
+	"sync"
 
 	"github.com/aarondl/sqlboiler/v4/boil"
 )
@@ -77,7 +82,7 @@ func DeleteGenerator(ctx context.Context, generatorID int64) error {
 func toDbGenerator(appGenerator confmodel.Generator) appdb.Generator {
 	return appdb.Generator{
 		ID:              int64(appGenerator.Id),
-		TenantID:        appGenerator.TenantId,
+		TenantID:        appGenerator.ElionaTenantId,
 		AssetID:         appGenerator.AssetId,
 		Attribute:       appGenerator.Attribute,
 		Subtype:         appGenerator.Subtype,
@@ -92,9 +97,14 @@ func toDbGenerator(appGenerator confmodel.Generator) appdb.Generator {
 }
 
 func toAppGenerator(dbGenerator *appdb.Generator) confmodel.Generator {
+	tenantUuid := uuid.MustParse(dbGenerator.TenantID)
+	apiKey, err := GetApiKey(tenantUuid)
+	if err != nil {
+		return confmodel.Generator{}
+	}
+
 	return confmodel.Generator{
 		Id:              int32(dbGenerator.ID),
-		TenantId:        dbGenerator.TenantID,
 		AssetId:         dbGenerator.AssetID,
 		Attribute:       dbGenerator.Attribute,
 		Subtype:         dbGenerator.Subtype,
@@ -106,6 +116,10 @@ func toAppGenerator(dbGenerator *appdb.Generator) confmodel.Generator {
 		IntervalSeconds: dbGenerator.IntervalSeconds,
 		Frequency:       dbGenerator.Frequency,
 		StartTime:       dbGenerator.InitializedAt,
+
+		ElionaTenantId: dbGenerator.TenantID,
+		ApiEndpoint:    client.ApiEndpointString(),
+		ApiKey:         apiKey,
 	}
 }
 
@@ -115,8 +129,61 @@ func GetGenerators(ctx context.Context) ([]confmodel.Generator, error) {
 		return nil, err
 	}
 	var appGenerators []confmodel.Generator
+	ResetApiKeyCache()
 	for _, dbGenerator := range dbGenerators {
 		appGenerators = append(appGenerators, toAppGenerator(dbGenerator))
 	}
 	return appGenerators, nil
+}
+
+func ParseTenantIdFromEnv(ctx context.Context) (uuid.UUID, error) {
+	env := frontend.GetEnvironment(ctx)
+	if env == nil {
+		return uuid.UUID{}, fmt.Errorf("missing environment JWT")
+	}
+	parsed, err := uuid.Parse(env.TenantId)
+	if err != nil {
+		return uuid.UUID{}, fmt.Errorf("tenant isn't a valid UUID: %s", env.TenantId)
+	}
+	return parsed, err
+}
+
+// --- cache (tenantUuid -> apiKey) ---
+
+var apiKeyCache = struct {
+	mu sync.RWMutex
+	m  map[string]string
+}{
+	m: make(map[string]string),
+}
+
+// ResetApiKeyCache clears the whole cache.
+func ResetApiKeyCache() {
+	apiKeyCache.mu.Lock()
+	defer apiKeyCache.mu.Unlock()
+	apiKeyCache.m = make(map[string]string)
+}
+
+// GetApiKey is the cached wrapper (same signature as your call-site).
+func GetApiKey(tenantUuid uuid.UUID) (string, error) {
+	// Fast path: cache hit
+	apiKeyCache.mu.RLock()
+	if v, ok := apiKeyCache.m[tenantUuid.String()]; ok {
+		apiKeyCache.mu.RUnlock()
+		return v, nil
+	}
+	apiKeyCache.mu.RUnlock()
+
+	// Cache miss: fetch using the uncached implementation
+	key, err := app.GetApiKey("device-simulator", GetDB(), tenantUuid)
+	if err != nil {
+		return "", err // don't cache failures
+	}
+
+	// Store in cache
+	apiKeyCache.mu.Lock()
+	apiKeyCache.m[tenantUuid.String()] = key
+	apiKeyCache.mu.Unlock()
+
+	return key, nil
 }

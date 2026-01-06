@@ -103,8 +103,7 @@ func (s *ConfigurationAPIService) GeneratorsPost(ctx context.Context, generator 
 
 func toAPIGenerator(appGenerator confmodel.Generator) apiserver.Generator {
 	return apiserver.Generator{
-		Id:              int32(appGenerator.Id),
-		TenantId:        appGenerator.TenantId,
+		Id:              appGenerator.Id,
 		AssetId:         appGenerator.AssetId,
 		Attribute:       appGenerator.Attribute,
 		Subtype:         appGenerator.Subtype,
@@ -122,9 +121,14 @@ func toAppGenerator(ctx context.Context, apiGenerator apiserver.Generator) (conf
 	if err != nil {
 		return confmodel.Generator{}, fmt.Errorf("getting asset type name: %v", err)
 	}
+
+	tenantId, err := conf.ParseTenantIdFromEnv(ctx)
+	if err != nil {
+		return confmodel.Generator{}, err
+	}
+
 	return confmodel.Generator{
-		Id:              int32(apiGenerator.Id),
-		TenantId:        apiGenerator.TenantId,
+		Id:              apiGenerator.Id,
 		AssetId:         apiGenerator.AssetId,
 		Attribute:       apiGenerator.Attribute,
 		Subtype:         apiGenerator.Subtype,
@@ -135,5 +139,7 @@ func toAppGenerator(ctx context.Context, apiGenerator apiserver.Generator) (conf
 		Integer:         apiGenerator.Integer,
 		IntervalSeconds: apiGenerator.IntervalSeconds,
 		Frequency:       apiGenerator.Frequency,
+
+		ElionaTenantId: tenantId.String(),
 	}, nil
 }

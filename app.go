@@ -26,47 +26,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/eliona-smart-building-assistant/go-eliona/v2/app"
-	"github.com/eliona-smart-building-assistant/go-eliona/v2/asset"
-	"github.com/eliona-smart-building-assistant/go-eliona/v2/dashboard"
 	"github.com/eliona-smart-building-assistant/go-eliona/v2/frontend"
 	"github.com/eliona-smart-building-assistant/go-utils/common"
-	"github.com/eliona-smart-building-assistant/go-utils/db"
 	utilshttp "github.com/eliona-smart-building-assistant/go-utils/http"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
-
-func initialization() {
-	ctx := context.Background()
-
-	// Necessary to close used init resources
-	conn := db.NewInitConnectionWithContextAndApplicationName(ctx, app.AppName())
-	defer conn.Close(ctx)
-
-	apiEndpoint := common.Getenv("API_ENDPOINT", "")
-	apiToken := common.Getenv("API_TOKEN", "")
-
-	// Init the app before the first run.
-	app.Init(
-		apiEndpoint,
-		apiToken,
-		conn, app.AppName(),
-		app.ExecSqlFile("conf/init.sql"),
-		asset.InitAssetTypeFiles(apiEndpoint, apiToken, "resources/asset-types/*.json"),
-		dashboard.InitWidgetTypeFiles(apiEndpoint, apiToken, "resources/widget-types/*.json"),
-	)
-	app.Patch(apiEndpoint, apiToken, conn, app.AppName(), "010100",
-		app.ExecSqlFile("conf/010100.sql"),
-	)
-	app.Patch(apiEndpoint, apiToken, conn, app.AppName(), "020000",
-		app.ExecSqlFile("conf/020000.sql"),
-	)
-}
 
 var once sync.Once
 
 func collectData() {
 	generators, err := conf.GetGenerators(context.Background())
+
 	if err != nil {
 		log.Fatal("conf", "Couldn't read generators from DB: %v", err)
 		return
@@ -79,6 +49,7 @@ func collectData() {
 	}
 
 	for _, generator := range generators {
+		time.Sleep(time.Millisecond * 100)
 		common.RunOnceWithParam(func(generator confmodel.Generator) {
 			log.Info("main", "Collecting %d started.", generator.Id)
 			if err := generateData(generator); err != nil {

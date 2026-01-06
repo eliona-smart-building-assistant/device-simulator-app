@@ -16,12 +16,12 @@
 package main
 
 import (
+	"context"
+	"device-simulator/v2/conf"
 	"time"
 
 	"github.com/aarondl/sqlboiler/v4/boil"
-	"github.com/eliona-smart-building-assistant/go-eliona/v2/app"
 	"github.com/eliona-smart-building-assistant/go-utils/common"
-	"github.com/eliona-smart-building-assistant/go-utils/db"
 	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
 
@@ -30,22 +30,15 @@ import (
 func main() {
 	log.Info("main", "Starting the app.")
 
-	// Set default database to use boil.*G functions.
-	database := db.Database(app.AppName())
-	defer database.Close()
-	boil.SetDB(database)
+	// Init Database
+	pool := conf.InitDefaultDB()
+	defer pool.Close(context.Background())
 
 	// Set the database logging level.
 	if log.Lev() >= log.TraceLevel {
 		boil.DebugMode = true
 		boil.DebugWriter = log.GetWriter(log.TraceLevel, "database")
 	}
-
-	// Necessary to close used init resources, because db.Pool() is used in this app.
-	defer db.ClosePool()
-
-	// Initialize the app
-	initialization()
 
 	// Starting the service to collect the data for this app.
 	common.WaitForWithOs(

@@ -17,11 +17,11 @@ package main
 
 import (
 	"context"
-	"device-simulator/apiserver"
-	"device-simulator/apiservices"
-	"device-simulator/conf"
-	"device-simulator/eliona"
-	confmodel "device-simulator/model/conf"
+	"device-simulator/v2/apiserver"
+	"device-simulator/v2/apiservices"
+	"device-simulator/v2/conf"
+	"device-simulator/v2/eliona"
+	confmodel "device-simulator/v2/model/conf"
 	"net/http"
 	"sync"
 	"time"

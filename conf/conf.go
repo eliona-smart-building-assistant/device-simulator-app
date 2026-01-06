@@ -18,8 +18,8 @@ package conf
 import (
 	"context"
 	"database/sql"
-	"device-simulator/appdb"
-	confmodel "device-simulator/model/conf"
+	"device-simulator/v2/appdb"
+	confmodel "device-simulator/v2/model/conf"
 	"errors"
 	"fmt"
 

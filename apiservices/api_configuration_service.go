@@ -17,10 +17,10 @@ package apiservices
 
 import (
 	"context"
-	"device-simulator/apiserver"
-	"device-simulator/conf"
-	"device-simulator/eliona"
-	confmodel "device-simulator/model/conf"
+	"device-simulator/v2/apiserver"
+	"device-simulator/v2/conf"
+	"device-simulator/v2/eliona"
+	confmodel "device-simulator/v2/model/conf"
 	"errors"
 	"fmt"
 	"net/http"

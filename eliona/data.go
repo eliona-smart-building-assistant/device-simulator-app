@@ -1,7 +1,7 @@
 package eliona
 
 import (
-	confmodel "device-simulator/model/conf"
+	confmodel "device-simulator/v2/model/conf"
 	"errors"
 	"fmt"
 

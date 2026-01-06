@@ -17,7 +17,7 @@ package apiservices
 
 import (
 	"context"
-	"device-simulator/apiserver"
+	"device-simulator/v2/apiserver"
 	"encoding/json"
 	"io"
 	"net/http"

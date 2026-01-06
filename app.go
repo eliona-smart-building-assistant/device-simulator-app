@@ -49,7 +49,7 @@ func collectData() {
 	}
 
 	for _, generator := range generators {
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 10)
 		common.RunOnceWithParam(func(generator confmodel.Generator) {
 			log.Info("main", "Collecting %d started.", generator.Id)
 			if err := generateData(generator); err != nil {

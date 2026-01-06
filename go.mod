@@ -7,7 +7,6 @@ toolchain go1.24.5
 require (
 	github.com/aarondl/sqlboiler/v4 v4.19.7
 	github.com/aarondl/strmangle v0.0.9
-	github.com/eliona-smart-building-assistant/app-integration-tests v1.1.6
 	github.com/eliona-smart-building-assistant/backend-frm v0.0.3
 	github.com/eliona-smart-building-assistant/go-eliona-api-client/v3 v3.0.6
 	github.com/eliona-smart-building-assistant/go-eliona/v2 v2.0.5
@@ -31,9 +30,6 @@ require (
 	github.com/ProtonMail/gopenpgp/v3 v3.3.0 // indirect
 	github.com/aarondl/inflect v0.0.2 // indirect
 	github.com/cloudflare/circl v1.6.1 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/eliona-smart-building-assistant/go-eliona v1.9.39 // indirect
-	github.com/eliona-smart-building-assistant/go-eliona-api-client/v2 v2.6.12 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
@@ -52,14 +48,11 @@ require (
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/cast v1.9.2 // indirect
-	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/volatiletech/sqlboiler/v4 v4.19.1 // indirect
 	github.com/volatiletech/strmangle v0.0.8 // indirect
 	golang.org/x/crypto v0.46.0 // indirect
-	golang.org/x/image v0.19.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
